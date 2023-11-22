@@ -11,7 +11,6 @@ import plotly.express as px
 import streamlit as st
 from math import ceil, floor
 
-
 # %%
 def roundup(x):
     return int(ceil(x * 2 / 1000.0)) * 1000 / 2
@@ -40,7 +39,18 @@ req_table = {
 }
 
 st.set_page_config(layout="wide", page_title="qPCR explorer")
-
+# Hide deploy button
+st.markdown("""
+    <style>
+        .reportview-container {
+            margin-top: -2em;
+        }
+        #MainMenu {visibility: hidden;}
+        .stDeployButton {display:none;}
+        footer {visibility: hidden;}
+        #stDecoration {display:none;}
+    </style>
+""", unsafe_allow_html=True)
 
 # Functions for each of the pages
 def home(uploaded_file):
@@ -231,7 +241,7 @@ def melt_plot():
     # Create an in-memory buffer
     with io.BytesIO() as buffer:
         # Write plot to buffer png
-        plot.write_image(file=buffer, format="png", engine="orca", scale=2)  # kaleido
+        plot.write_image(file=buffer, format="png", engine="kaleido", scale=2)
         # button to download image
         st.download_button(
             label="Download plot",
@@ -415,7 +425,7 @@ def amp_primary_plot():
     # Create an in-memory buffer
     with io.BytesIO() as buffer:
         # Write plot to buffer png
-        plot.write_image(file=buffer, format="png", engine="orca", scale=2)  # kaleido
+        plot.write_image(file=buffer, format="png", engine="kaleido", scale=2)
         # button to download image
         st.download_button(
             label="Download plot",
@@ -435,13 +445,16 @@ st.write("---")
 st.sidebar.title("File upload")
 # upload_file_amp = st.sidebar.file_uploader('Upload a file containing qPCR amplification data')
 upload_file_amp_primary = st.sidebar.file_uploader(
-    "Upload a file containing qPCR amplification primary curve data"
+    "Upload a file containing qPCR **amplification primary curve** data",
+    type = ["csv"]
 )
 upload_file_melt = st.sidebar.file_uploader(
-    "Upload a file containing qPCR melting data"
+    "Upload a file containing qPCR **melting** data",
+    type = ["txt", "tsv"]
 )
 upload_file_reaction_id = st.sidebar.file_uploader(
-    "Upload a file containing qPCR reaction id data"
+    "Upload a file containing qPCR **reaction id** data",
+    type = ["csv"]
 )
 
 # Sidebar navigation
